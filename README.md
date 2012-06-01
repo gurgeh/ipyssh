@@ -7,7 +7,7 @@ Requires ipython >= 0.12 on the host and ipython-qtconsole >= 0.12 on the client
 
 Usage: ipyssh <hostname>
 
-If no hostname is supplied, it runs localy, just like an alias to ipython-qtconsole.
+If no hostname is supplied, it runs locally, just like an alias to ipython-qtconsole.
 Hostname may optionally include user and port, as in user@hostname:port. I recommend that you use your ssh_config to set up proper aliases, though.
 
 Here is an Ubuntu PPA:
