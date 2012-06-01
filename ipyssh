@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
-LOCAL_ARGS=0
-SSH_ARGS=1
+LOCAL_IPYTHON="ipython-qtconsole --gui-completion"
+REMOTE_IPYTHON="ipython kernel --pylab=inline"
+REMOTE_PIDFILE=/tmp/`whoami`.$$.ipypid
+
 E_BADARGS=65
 
-if [ $# -eq $LOCAL_ARGS ]
+if [ $# -eq 0 ]
 then
     echo "Doing local. If you want to run over ssh, supply a host."
     ipython-qtconsole
     exit
-elif [ $# -ne $SSH_ARGS ]
+elif [ $# -ne 1 ]
 then
   echo "Usage: `basename $0` {remote host}"
   echo "Remote host can optionally include user and port: user@host:port"
@@ -18,9 +20,10 @@ then
 fi
 
 IPYJSON=`mktemp`
-REMOTEPIDFILE=/tmp/`whoami`.$$.ipypid
-ssh $1 "(ipython kernel 2>&1 &) | head -n 2 | tail -n 1 | awk '{print \$3}' | tee $REMOTEPIDFILE | xargs -i cat ~/.ipython/profile_default/security/{} | head -n 8" > $IPYJSON
 
-ipython-qtconsole --ssh $1 --existing $IPYJSON
+ssh $1 "($REMOTE_IPYTHON 2>&1 &) | head -n 2 | tail -n 1 | awk '{print \$3}' | tee $REMOTE_PIDFILE | xargs -i cat ~/.ipython/profile_default/security/{} | head -n 8" > $IPYJSON
 
-ssh $1 "kill \`cat $REMOTEPIDFILE | tr -cd [:digit:]\` && rm $REMOTEPIDFILE"
+$LOCAL_IPYTHON --ssh $1 --existing $IPYJSON
+
+ssh $1 "kill \`cat $REMOTE_PIDFILE | tr -cd [:digit:]\` && rm $REMOTE_PIDFILE"
+rm $IPYJSON
