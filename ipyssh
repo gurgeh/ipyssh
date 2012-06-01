@@ -9,7 +9,7 @@ E_BADARGS=65
 if [ $# -eq 0 ]
 then
     echo "Doing local. If you want to run over ssh, supply a host."
-    ipython-qtconsole
+    $LOCAL_IPYTHON
     exit
 elif [ $# -ne 1 ]
 then
