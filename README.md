@@ -5,7 +5,7 @@ ipython-qtconsole (http://ipython.org/ipython-doc/dev/interactive/qtconsole.html
 
 Requires ipython >= 0.12 on the host and ipython-qtconsole >= 0.12 on the client. You may get away with 0.11, but I have not tested it.
 
-Usage: ipyssh <hostname>
+Usage: ipyssh [hostname]
 
 If no hostname is supplied, it runs locally, just like an alias to ipython-qtconsole.
 Hostname may optionally include user and port, as in user@hostname:port. I recommend that you use your ssh_config to set up proper aliases, though.
