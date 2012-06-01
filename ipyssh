@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+LOCAL_ARGS=0
+SSH_ARGS=1
+E_BADARGS=65
+
+if [ $# -eq $LOCAL_ARGS ]
+then
+    echo "Doing local. If you want to run over ssh, supply a host."
+    ipython-qtconsole
+    exit
+elif [ $# -ne $SSH_ARGS ]
+then
+  echo "Usage: `basename $0` {remote host}"
+  echo "Remote host can optionally include user and port: user@host:port"
+  echo "With no arguments ipython-qtconsole runs on localhost"
+  exit $E_BADARGS
+fi
+
+IPYJSON=`mktemp`
+REMOTEPIDFILE=/tmp/`whoami`.$$.ipypid
+ssh $1 "(ipython kernel 2>&1 &) | head -n 2 | tail -n 1 | awk '{print \$3}' | tee $REMOTEPIDFILE | xargs -i cat ~/.ipython/profile_default/security/{} | head -n 8" > $IPYJSON
+
+ipython-qtconsole --ssh $1 --existing $IPYJSON
+
+ssh $1 "kill \`cat $REMOTEPIDFILE | tr -cd [:digit:]\` && rm $REMOTEPIDFILE"
