@@ -22,8 +22,10 @@ fi
 IPYJSON=`mktemp`
 
 ssh $1 "($REMOTE_IPYTHON 2>&1 &) | head -n 2 | tail -n 1 | awk '{print \$3}' | tee $REMOTE_PIDFILE | xargs -i cat ~/.ipython/profile_default/security/{} | head -n 8" > $IPYJSON
+echo "Remote kernel started"
 
 $LOCAL_IPYTHON --ssh $1 --existing $IPYJSON
 
-ssh $1 "kill \`cat $REMOTE_PIDFILE | tr -cd [:digit:]\` && rm $REMOTE_PIDFILE"
+echo "Cleaning up"
+ssh $1 "REMOTE_JSON=\`cat $REMOTE_PIDFILE\`; kill \`echo \$REMOTE_JSON | tr -cd [:digit:]\` && rm ~/.ipython/profile_default/security/\$REMOTE_JSON && rm $REMOTE_PIDFILE"
 rm $IPYJSON

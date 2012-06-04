@@ -14,3 +14,5 @@ Here is an Ubuntu PPA:
 https://launchpad.net/~gurgeh/+archive/ipyssh
 
 If you don't want --pylab=inline on the remote ipython kernel, or would like another color scheme or something, the shell file is utterly non-threatening, so feel free to customize it.
+
+If you want to know who started a kernel on a server, where several people use the same login, do ls /tmp/*.ipypid. The client username is the first part of the filename. The files contain a reference to the corresponding ipython process ID.
