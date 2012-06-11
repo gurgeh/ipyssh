@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LOCAL_IPYTHON="ipython-qtconsole --gui-completion"
+LOCAL_IPYTHON="ipython qtconsole --gui-completion"
 REMOTE_IPYTHON="ipython kernel --pylab=inline"
 REMOTE_PIDFILE=/tmp/`whoami`.$$.ipypid
 
